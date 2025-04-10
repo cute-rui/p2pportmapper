@@ -17,6 +17,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: Add target toolchain
+      run: rustup target add ${{ matrix.toolchain }}
     - name: Build
       run: cargo build --release --target=${{ matrix.toolchain }}
     - name: Upload binaries to release for windows
