@@ -26,7 +26,7 @@ jobs:
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: target/release/p2p_port_mapper.exe
-        asset_name: p2p_port_mapper-${{ matrix.platform }}.exe
+        asset_name: p2p-port-mapper-${{ matrix.platform }}.exe
         tag: ${{ github.ref }}
         overwrite: true
         file_glob: true
@@ -36,7 +36,7 @@ jobs:
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: target/release/p2p_port_mapper
-        asset-name: p2p_port_mapper-${{ matrix.platform }}
+        asset_name: p2p-port-mapper-${{ matrix.platform }}
         tag: ${{ github.ref }}
         overwrite: true
         file_glob: true
