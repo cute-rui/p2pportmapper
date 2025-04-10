@@ -11,31 +11,32 @@ jobs:
   deploy:
     strategy:
       matrix:
-        platform: [ubuntu-latest]
-        toolchain: [x86_64-pc-windows-msvc, aarch64-unknown-linux-musl, x86_64-unknown-linux-musl]
+        platform: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.platform }}
 
     steps:
     - uses: actions/checkout@v4
-    - name: Add target toolchain
-      run: rustup target add ${{ matrix.toolchain }}
     - name: Build
-      run: cargo build --release --target=${{ matrix.toolchain }}
+      run: cargo build --release
+    - name: Test
+      run: ls target/release/
     - name: Upload binaries to release for windows
-      if: matrix.toolchain == 'x86_64-pc-windows-msvc'
+      if: matrix.platform == 'windows-latest'
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: target/release/p2p_port_mapper.exe
+        asset_name: p2p_port_mapper-${{ matrix.platform }}.exe
         tag: ${{ github.ref }}
         overwrite: true
         file_glob: true
     - name: Upload binaries to release for linux
-      if: matrix.toolchain != 'x86_64-pc-windows-msvc'
+      if: matrix.platform != 'windows-latest'
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: target/release/p2p_port_mapper
+        asset-name: p2p_port_mapper-${{ matrix.platform }}
         tag: ${{ github.ref }}
         overwrite: true
         file_glob: true
