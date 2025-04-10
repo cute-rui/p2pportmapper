@@ -1,0 +1,9 @@
+[package]
+name = "p2p_port_mapper"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+config = "0.15.11"
+serde = "1.0.219"
+tokio = { version = "1.44.2", features = ["full"] }
