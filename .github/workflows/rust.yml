@@ -1,0 +1,39 @@
+name: Rust
+
+on:
+  release:
+    types: [prereleased]
+    
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  deploy:
+    strategy:
+      matrix:
+        platform: [ubuntu-latest]
+        toolchain: [x86_64-pc-windows-msvc, aarch64-unknown-linux-musl, x86_64-unknown-linux-musl]
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build
+      run: cargo build --release --target=${{ matrix.toolchain }}
+    - name: Upload binaries to release for windows
+      if: matrix.toolchain == 'x86_64-pc-windows-msvc'
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: target/release/p2p_port_mapper.exe
+        tag: ${{ github.ref }}
+        overwrite: true
+        file_glob: true
+    - name: Upload binaries to release for linux
+      if: matrix.toolchain != 'x86_64-pc-windows-msvc'
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: target/release/p2p_port_mapper
+        tag: ${{ github.ref }}
+        overwrite: true
+        file_glob: true
